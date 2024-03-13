@@ -1,20 +1,20 @@
 <a name="readme-top"></a>
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/derchrischkya/template/release.yaml)
-![GitHub release (with filter)](https://img.shields.io/github/v/release/derchrischkya/template)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/derchrischkya/elastic-certification/release.yaml)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/derchrischkya/elastic-certification)
 <br />
 <div align="center">
-  <h3 align="center">Template</h3>
+  <h3 align="center"></h3>
 
   <p align="center">
     <br />
-    <a href="https://github.com/derchrischkya/template"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/derchrischkya/elastic-certification"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     ·
-    <a href="https://github.com/derchrischkya/template/issues">Report Bug</a>
+    <a href="https://github.com/derchrischkya/elastic-certification/issues">Report Bug</a>
     ·
-    <a href="https://github.com/derchrischkya/template/issues">Request Feature</a>
+    <a href="https://github.com/derchrischkya/elastic-certification/issues">Request Feature</a>
   </p>
 </div>
 
@@ -50,15 +50,56 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+This project is used to cover basic requirements for elastic certified engineer exam.
 
+
+## About the exam
+- 3h practical hands-on exam on 10 tasks
+- no multiple choice questions
+
+## Exam topics
+1. Data Management
+- Define an index that satisfies a given set of requirements
+- Define and use an index elastic-certification for a given pattern that satisfies a given set of requirements
+- Define and use a dynamic elastic-certification that satisfies a given set of requirements
+- Define an Index Lifecycle Policy for a time-series index
+- Define an index elastic-certification that creates a new data stream
+
+2. Searching data
+- Write and execute a search query for terms and/or phrases in one or more fields of an index
+- Write and execute a search query that is a boolean combination of multiple queries and filters
+- Write and execute metric and bucket aggregations
+- Write and execute aggregations that contain sub-aggregations
+- Write and execute a query that searches accross multiple clusters
+- Write and execute a search that utilizes a runtime field
+
+3. Developing search applications
+- Highlight the search terms in the response of a query
+- Sort the results of a query by a given set of requirements
+- Implement pagination of the results of a search query
+- Define and use index aliases
+- Define and use a search elastic-certification
+
+4. Data Processing
+- Define a mapping that satisfies a given set of requirements
+- Define and use a custom analyzer that satisfies a given set of requirements
+- Define and use multi-fields with different data types and/or analyzers
+- Use the Reindex API and update by query api to reindex
+- Define and use an ingest pipleine that satisfies a given set of requirements, including the use of painless to modify docuemnts
+- Define runtime fields to retrieve custom values using painless scripting
+
+5. Cluster Management
+- Diagnose shard issues and repair a cluster's health
+- Backup and restore a cluster and/or specific indices
+- Configure a snapshot to be searchable
+- Configure a cluster for cross cluster search
+- Implement cross-cluster replication
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-
 ### Built With
 - Markdown
-- Github Actions
-- Github Pages
+- Docker
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -71,19 +112,26 @@ Clone the repository
 
 ### Prerequisites
 
+- Docker
+- Docker-compose
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
+_Below is an example of how you can instruct your audience on installing and setting up your app. This elastic-certification doesn't rely on any external dependencies or services._
 
 0. Clone the repo
    ```sh
-   git clone git@github.com:derchrischkya/template.git
+   git clone git@github.com:derchrischkya/elastic-certification.git
    ```
-
+1. Check out the `project` or `topics`folder
+2. Spin up elastic deployment with make command, check out possibilities with `make help`
+   ```sh
+   cd ./deployment
+   make help
+   ```
+3. Go for practical hands-on!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- ROADMAP -->
@@ -91,7 +139,7 @@ _Below is an example of how you can instruct your audience on installing and set
 
 - [x] 
 
-See the [open issues](https://github.com/derchrischkya/template/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/derchrischkya/elastic-certification/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -118,7 +166,7 @@ Don't forget to give the project a star! Thanks again!
 
 Christoph Richter  - christoph.richter1997@gmail.com
 
-Project Link: [https://github.com/derchrischkya/template](https://github.com/derchrischkya/template)
+Project Link: [https://github.com/derchrischkya/elastic-certification](https://github.com/derchrischkya/elastic-certification)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
