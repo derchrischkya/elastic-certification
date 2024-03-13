@@ -53,11 +53,11 @@
 This project is used to cover basic requirements for elastic certified engineer exam.
 
 
-## About the exam
+### About the exam
 - 3h practical hands-on exam on 10 tasks
 - no multiple choice questions
 
-## Exam topics
+### Exam topics
 1. Data Management
 - Define an index that satisfies a given set of requirements
 - Define and use an index elastic-certification for a given pattern that satisfies a given set of requirements
@@ -107,9 +107,6 @@ This project is used to cover basic requirements for elastic certified engineer 
 
 <!-- GETTING STARTED -->
 ## Getting Started
-
-Clone the repository
-
 ### Prerequisites
 
 - Docker
@@ -123,7 +120,7 @@ _Below is an example of how you can instruct your audience on installing and set
    ```sh
    git clone git@github.com:derchrischkya/elastic-certification.git
    ```
-1. Check out the `project` or `topics`folder
+1. Check out the `project` or `topics` folder
 2. Spin up elastic deployment with make command, check out possibilities with `make help`
    ```sh
    cd ./deployment
