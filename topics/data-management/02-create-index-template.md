@@ -44,6 +44,7 @@ PUT /_index_template/template_weather
   }
 }
 ```
+
 # Output
 The health of the index should be green!
 
