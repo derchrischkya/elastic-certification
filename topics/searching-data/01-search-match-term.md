@@ -30,7 +30,7 @@ Which type of query should be used to search for 1 and 2?
 - https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-stats-aggregation.html
 
 # Code
-#### Term query
+#### `term` query
 On `keyword` field - looks fine
 ```json
 GET /flights/_search
@@ -155,7 +155,7 @@ GET /flights/_search
 }
 ```
 
-#### Match query
+#### `match` query
 On `text` field - looks fine
 First try:
 ```json
@@ -223,49 +223,3 @@ GET /flights/_search
 ```
 
 The second try matches more documents because the field `UNIQUE_CARRIER_NAME` is a `text` field. The second query analyzed by the phrases `Delta`, `Air`, `Lines`, `Inc.` while the first one only by `Delta`.
-
-#### Combinate term and match query
-
-```json
-GET /flights/_search
-{
-  "size": 0,
-  "query": {
-    "bool": {
-      "must": [
-          {"match": {
-            "UNIQUE_CARRIER_NAME": "Delta"
-          }
-          },
-          {
-            "term": { 
-              "ORIGIN_STATE_NM": "Arizona"
-            }
-          }
-      ]
-    }
-  }
-}
-```
-
-- 5 documents found
-```
-{
-  "took": 3,
-  "timed_out": false,
-  "_shards": {
-    "total": 1,
-    "successful": 1,
-    "skipped": 0,
-    "failed": 0
-  },
-  "hits": {
-    "total": {
-      "value": 5,
-      "relation": "eq"
-    },
-    "max_score": null,
-    "hits": []
-  }
-}
-```
