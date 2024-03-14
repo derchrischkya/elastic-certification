@@ -37,7 +37,9 @@ PUT /_component_template/component_weather
     }
   }
 }
+```
 
+```json
 PUT /_component_template/single-node
 {
   "template": {
@@ -78,36 +80,10 @@ GET /_index_template/template_weather
         "index_patterns": [
           "weather*"
         ],
-        "template": {
-          "settings": {
-            "index": {
-              "number_of_shards": "1",
-              "number_of_replicas": "0"
-            }
-          },
-          "mappings": {
-            "runtime": {
-              "day_of_week": {
-                "type": "keyword",
-                "script": {
-                  "source": "emit(doc['@timestamp'].value.dayOfWeekEnum.getDisplayName(TextStyle.FULL, Locale.ROOT))"
-                }
-              }
-            },
-            "properties": {
-              "temperature": {
-                "type": "float"
-              },
-              "location": {
-                "type": "geo_point"
-              },
-              "timestamp": {
-                "type": "date"
-              }
-            }
-          }
-        },
-        "composed_of": []
+        "composed_of": [
+          "component_weather",
+          "single-node"
+        ]
       }
     }
   ]
