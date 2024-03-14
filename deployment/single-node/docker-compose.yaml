@@ -24,7 +24,7 @@ services:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
     networks:
-      elastic-singlenode:
+      elastic-singlenode: 
         ipv4_address: 10.5.0.4
     depends_on:
       - elasticsearch
@@ -60,6 +60,11 @@ services:
     ports:
       - 9200:9200
       - 9300:9300
+    healthcheck:
+      test: "curl -s http://elasticsearch:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
+      interval: 10s
+      retries: 10
+      start_period: 10s
 
   kibana:
     networks:
@@ -75,6 +80,24 @@ services:
       - 5601:5601
     depends_on:
       - elasticsearch
+  init-data:
+    build: .
+    image: alpine:3.12
+    container_name: data
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+    volumes:
+      - ./config/demo-data:/demo-data
+    entrypoint: /bin/sh -c /demo-data/entrypoint.sh
+    expose:
+      - "5000"
+    networks: 
+      elastic-singlenode: 
+        ipv4_address: 10.5.0.5
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
 
 volumes:
   elasticsearch-data:

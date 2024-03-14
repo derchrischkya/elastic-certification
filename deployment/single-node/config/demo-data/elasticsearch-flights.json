@@ -1,0 +1,160 @@
+{
+    "settings": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0
+    },
+    "mappings": {
+        "properties": {
+            "DEPARTURES_SCHEDULED": {
+                "type": "float"
+            },
+            "DEPARTURES_PERFORMED": {
+                "type": "float"
+            },
+            "PAYLOAD": {
+                "type": "float"
+            },
+            "SEATS": {
+                "type": "float"
+            },
+            "PASSENGERS": {
+                "type": "float"
+            },
+            "FREIGHT": {
+                "type": "float"
+            },
+            "MAIL": {
+                "type": "float"
+            },
+            "DISTANCE": {
+                "type": "float"
+            },
+            "RAMP_TO_RAMP": {
+                "type": "float"
+            },
+            "AIR_TIME": {
+                "type": "float"
+            },
+            "UNIQUE_CARRIER": {
+                "type": "keyword"
+            },
+            "AIRLINE_ID": {
+                "type": "integer"
+            },
+            "UNIQUE_CARRIER_NAME": {
+                "type": "text"
+            },
+            "UNIQUE_CARRIER_ENTITY": {
+                "type": "keyword"
+            },
+            "REGION": {
+                "type": "keyword"
+            },
+            "CARRIER": {
+                "type": "keyword"
+            },
+            "CARRIER_NAME": {
+                "type": "text"
+            },
+            "CARRIER_GROUP": {
+                "type": "integer"
+            },
+            "CARRIER_GROUP_NEW": {
+                "type": "integer"
+            },
+            "ORIGIN_AIRPORT_ID": {
+                "type": "integer"
+            },
+            "ORIGIN_AIRPORT_SEQ_ID": {
+                "type": "integer"
+            },
+            "ORIGIN_CITY_MARKET_ID": {
+                "type": "integer"
+            },
+            "ORIGIN": {
+                "type": "keyword"
+            },
+            "ORIGIN_CITY_NAME": {
+                "type": "text"
+            },
+            "ORIGIN_STATE_ABR": {
+                "type": "keyword"
+            },
+            "ORIGIN_STATE_FIPS": {
+                "type": "keyword"
+            },
+            "ORIGIN_STATE_NM": {
+                "type": "keyword"
+            },
+            "ORIGIN_COUNTRY": {
+                "type": "keyword"
+            },
+            "ORIGIN_COUNTRY_NAME": {
+                "type": "keyword"
+            },
+            "ORIGIN_WAC": {
+                "type": "integer"
+            },
+            "DEST_AIRPORT_ID": {
+                "type": "integer"
+            },
+            "DEST_AIRPORT_SEQ_ID": {
+                "type": "integer"
+            },
+            "DEST_CITY_MARKET_ID": {
+                "type": "integer"
+            },
+            "DEST": {
+                "type": "keyword"
+            },
+            "DEST_CITY_NAME": {
+                "type": "keyword"
+            },
+            "DEST_STATE_ABR": {
+                "type": "keyword"
+            },
+            "DEST_STATE_FIPS": {
+                "type": "keyword"
+            },
+            "DEST_STATE_NM": {
+                "type": "keyword"
+            },
+            "DEST_COUNTRY": {
+                "type": "keyword"
+            },
+            "DEST_COUNTRY_NAME": {
+                "type": "keyword"
+            },
+            "DEST_WAC": {
+                "type": "integer"
+            },
+            "AIRCRAFT_GROUP": {
+                "type": "integer"
+            },
+            "AIRCRAFT_TYPE": {
+                "type": "integer"
+            },
+            "AIRCRAFT_CONFIG": {
+                "type": "integer"
+            },
+            "YEAR": {
+                "type": "integer"
+            },
+            "QUARTER": {
+                "type": "integer"
+            },
+            "MONTH": {
+                "type": "integer"
+            },
+            "DISTANCE_GROUP": {
+                "type": "integer"
+            },
+            "CLASS": {
+                "type": "keyword"
+            },
+            "DATA_SOURCE": {
+                "type": "keyword"
+            }
+        }
+    }
+}
