@@ -2,14 +2,26 @@
 When spinning up the single node cluster, the index `flights` was created with sample data. Now lets search for some data!
 
 Lets start with some theory when to use:
-- `term`: Returns documents that contain an exact term in a provided field.
-- `match`: Returns documents that match a provided text, number, date or boolean value. The provided text is analyzed before matching. (field needs to be type `text`)
+- `term`: Returns documents that contain an exact term in a provided field. (no field type `text` allowed, only `keyword` or `numeric` fields - case sensitive)
 
-Test:
-1. {"id": "5"}
-2. {"message": "I am a long text and only this \"value\" is important"}
 
-Solution: (use https://www.devglan.com/online-tools/text-encryption-decryption with key `elastic`)
+- `match`: Returns documents that match a provided text, number, date or boolean value. The provided text is analyzed before matching. (field needs to be type `text` - case insensitive)
+
+#### Test:
+Which type of query should be used to search for 1 and 2?
+
+1. 
+```json
+{"id": "5"}
+```
+
+2. 
+```json
+{"message": "I am a long text and only this \"value\" is important"}
+```
+
+#### Solution
+(use https://www.devglan.com/online-tools/text-encryption-decryption with key `elastic`)
 - oAt2y6codUjNSmfc49oNydIsm26PXj/5LV4CKnNgN3o=
 
 # Reference
