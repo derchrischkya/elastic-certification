@@ -29,7 +29,7 @@ GET /flights/_search
 ```
 
 - 5 documents found
-```
+```json
 {
   "took": 3,
   "timed_out": false,
@@ -74,7 +74,7 @@ GET /flights/_search
 }
 ```
 
-```
+```json
 {
   "took": 3,
   "timed_out": false,
