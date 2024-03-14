@@ -5,7 +5,7 @@ Create index `weather` with the following requirements:
 - Field `timestamp` should be of type `date`
 
 # Reference
-https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html
 
 # Code
 ```json
