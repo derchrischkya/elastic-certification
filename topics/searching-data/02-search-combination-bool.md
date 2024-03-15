@@ -1,7 +1,12 @@
 # Example
-When spinning up the single node cluster, the index `flights` was created with sample data. Now lets search for some data!
+When spinning up the `single-node` cluster, the index `flights` was created with sample data. Now lets search for some data!
 
 We want to combine the `term` and `match` query to find all flights from Delta in Arizona.
+
+# Reference
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html
 
 # Code
 #### Combinate `term and match` query
@@ -96,7 +101,26 @@ GET /flights/_search
 ```
 
 #### Combination `term or match with must_not` query
-
+```json
+POST /flights/_async_search
+{
+  "query": {
+    "bool": {
+      "must_not": [
+          {"match": {
+            "UNIQUE_CARRIER_NAME": "Delta"
+          }
+          },
+          {
+            "term": { 
+              "ORIGIN_STATE_NM": "Arizona"
+            }
+          }
+      ]
+    }
+  }
+}
+```
 ```json
 {
   "took": 5,

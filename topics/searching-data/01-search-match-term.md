@@ -1,5 +1,5 @@
 # Example
-When spinning up the single node cluster, the index `flights` was created with sample data. Now lets search for some data!
+When spinning up the `single-node` cluster, the index `flights` was created with sample data. Now lets search for some data!
 
 Lets start with some theory when to use:
 - `term`: Returns documents that contain an exact term in a provided field. (no field type `text` allowed, only `keyword` or `numeric` fields - case sensitive)
@@ -27,7 +27,6 @@ Which type of query should be used to search for 1 and 2?
 # Reference
 - https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-term-query.html
 - https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-query.html
-- https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-metrics-stats-aggregation.html
 
 # Code
 #### `term` query

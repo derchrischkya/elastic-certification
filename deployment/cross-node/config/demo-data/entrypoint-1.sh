@@ -12,7 +12,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 # Import create flights index
-curl -s -H "Content-Type: application/json" -XPUT "${ELASTICSEARCH_HOST:-elasticsearch}:9200/flights?pretty" -u elastic:${ELASTIC_PASSWORD} -d @elasticsearch-flights.json
+curl -s -H "Content-Type: application/json" -XPUT "${ELASTICSEARCH_HOST:-elasticsearch}:9200/flights?pretty" -u elastic:${ELASTIC_PASSWORD} -d @elasticsearch-flights-1.json
 if [ $? -ne 0 ]; then
   echo "Failed to create flights index"
   exit 1

@@ -1,0 +1,272 @@
+version: '3.7'
+
+networks:
+  elastic-node1:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.5.0.0/16
+         gateway: 10.5.0.1
+  elastic-node2:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.4.0.0/16
+         gateway: 10.4.0.1
+  elastic-node3:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.3.0.0/16
+         gateway: 10.3.0.1
+services:
+  setup1:
+    profiles:
+      - setup1
+    build:
+      context: setup/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    init: true
+    volumes:
+      - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
+      - ./setup/lib.sh:/lib.sh:ro,Z
+      - ./setup/roles:/roles:ro,Z
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+      ELASTICSEARCH_HOST: elasticsearch-1
+    networks:
+      elastic-node1: 
+        ipv4_address: 10.5.0.4
+    depends_on:
+      - elasticsearch-1
+  setup2:
+    profiles:
+      - setup2
+    build:
+      context: setup/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    init: true
+    volumes:
+      - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
+      - ./setup/lib.sh:/lib.sh:ro,Z
+      - ./setup/roles:/roles:ro,Z
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+      ELASTICSEARCH_HOST: elasticsearch-2
+    networks:
+      elastic-node2: 
+        ipv4_address: 10.4.0.4
+    depends_on:
+      - elasticsearch-2
+  setup3:
+    profiles:
+      - setup3
+    build:
+      context: setup/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    init: true
+    volumes:
+      - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
+      - ./setup/lib.sh:/lib.sh:ro,Z
+      - ./setup/roles:/roles:ro,Z
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+      ELASTICSEARCH_HOST: elasticsearch-3
+    networks:
+      elastic-node3: 
+        ipv4_address: 10.3.0.4
+    depends_on:
+      - elasticsearch-3
+  # Elasticsearch Docker Images: https://www.docker.elastic.co/
+  elasticsearch-1:
+    networks:
+      elastic-node1:
+        ipv4_address: 10.5.0.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: elasticsearch-1
+    environment:
+      node.name: elasticsearch
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      # Bootstrap password.
+      # Used to initialize the keystore during the initial startup of
+      # Elasticsearch. Ignored on subsequent runs.
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+      # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+      discovery.type: single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./data-1:/usr/share/elasticsearch/data
+      - ./config/elasticsearch-1.yaml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+    ports:
+      - 9200:9200
+      - 9300:9300
+    healthcheck:
+      test: "curl -s http://elasticsearch-1:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
+      interval: 10s
+      retries: 10
+      start_period: 10s
+  elasticsearch-2:
+    networks:
+      elastic-node2:
+        ipv4_address: 10.4.0.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: elasticsearch-2
+    environment:
+      node.name: elasticsearch
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      # Bootstrap password.
+      # Used to initialize the keystore during the initial startup of
+      # Elasticsearch. Ignored on subsequent runs.
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+      # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+      discovery.type: single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./data-2:/usr/share/elasticsearch/data
+      - ./config/elasticsearch-2.yaml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+    ports:
+      - 9202:9200
+      - 9302:9300
+    healthcheck:
+      test: "curl -s http://elasticsearch-2:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
+      interval: 10s
+      retries: 10
+      start_period: 10s
+  elasticsearch-3:
+    networks:
+      elastic-node3:
+        ipv4_address: 10.3.0.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    container_name: elasticsearch-3
+    environment:
+      node.name: elasticsearch
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      # Bootstrap password.
+      # Used to initialize the keystore during the initial startup of
+      # Elasticsearch. Ignored on subsequent runs.
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      # Use single node discovery in order to disable production mode and avoid bootstrap checks.
+      # see: https://www.elastic.co/guide/en/elasticsearch/reference/current/bootstrap-checks.html
+      discovery.type: single-node
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+    volumes:
+      - ./data-3:/usr/share/elasticsearch/data
+      - ./config/elasticsearch-3.yaml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+    ports:
+      - 9203:9200
+      - 9303:9300
+    healthcheck:
+      test: "curl -s http://elasticsearch-3:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
+      interval: 10s
+      retries: 10
+      start_period: 10s
+
+  kibana:
+    networks:
+      elastic-node1:
+        ipv4_address: 10.5.0.3
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
+    environment:
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+    volumes:
+      - ./config/kibana.yaml:/usr/share/kibana/config/kibana.yml:ro,Z
+    ports:
+      - 5601:5601
+    healthcheck:
+      test: "curl -s http://127.0.0.1:5601/api/status -u elastic:changeme | grep status | grep '{\"overall\":{\"level\":\"available\"'"
+      interval: 10s
+      retries: 20
+      start_period: 10s
+    depends_on:
+      elasticsearch-1:
+        condition: service_healthy
+  init-data-1:
+    build: .
+    image: alpine:3.12
+    container_name: data-1
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+      ELASTICSEARCH_HOST: elasticsearch-1
+    volumes:
+      - ./config/demo-data:/demo-data
+    entrypoint: /bin/sh -c /demo-data/entrypoint-1.sh
+    networks: 
+      elastic-node1: 
+        ipv4_address: 10.5.0.5
+    depends_on:
+      elasticsearch-1:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+  init-data-2:
+    build: .
+    image: alpine:3.12
+    container_name: data-2
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+      ELASTICSEARCH_HOST: elasticsearch-2
+    volumes:
+      - ./config/demo-data:/demo-data
+    entrypoint: /bin/sh -c /demo-data/entrypoint-2.sh
+    networks: 
+      elastic-node2: 
+        ipv4_address: 10.4.0.5
+    depends_on:
+      elasticsearch-2:
+        condition: service_healthy
+  init-data-3:
+    build: .
+    image: alpine:3.12
+    container_name: data-3
+    environment:
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
+      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
+      ELASTICSEARCH_HOST: elasticsearch-3
+    volumes:
+      - ./config/demo-data:/demo-data
+    entrypoint: /bin/sh -c /demo-data/entrypoint-2.sh
+    networks: 
+      elastic-node3: 
+        ipv4_address: 10.3.0.5
+    depends_on:
+      elasticsearch-3:
+        condition: service_healthy
+
+volumes:
+  elasticsearch-data:
+    driver: local

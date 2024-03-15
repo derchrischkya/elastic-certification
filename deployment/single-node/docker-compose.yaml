@@ -61,7 +61,7 @@ services:
       - 9200:9200
       - 9300:9300
     healthcheck:
-      test: "curl -s http://elasticsearch:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
+      test: "curl -s http://elasticsearch:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\green\\|yellow\\)'"
       interval: 10s
       retries: 10
       start_period: 10s
@@ -78,6 +78,11 @@ services:
       - ./config/kibana.yaml:/usr/share/kibana/config/kibana.yml:ro,Z
     ports:
       - 5601:5601
+    healthcheck:
+      test: "curl -s http://kibana:5601/api/status -u elastic:${ELASTIC_PASSWORD:-}"
+      interval: 10s
+      retries: 20
+      start_period: 10s
     depends_on:
       - elasticsearch
   init-data:
@@ -98,6 +103,9 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
+      kibana:
+        condition: service_healthy
+
 
 volumes:
   elasticsearch-data:
