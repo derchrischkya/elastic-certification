@@ -33,10 +33,11 @@ stop-cross-node: .stop-cross-node .clean-cross-node
 	@mkdir -p ./cross-node/data-3
 
 .run-cross-node:
-	cd ./cross-node && docker-compose up -d setup1 setup2 setup3 && docker-compose up -d
+	cd ./cross-node && docker-compose up -d
 
 .stop-cross-node:
-	cd ./cross-node && docker-compose down setup1 setup2 setup3 && docker-compose down
+	cd ./cross-node && docker-compose down setup-1 setup-2 setup-3 && docker-compose down
 
 .clean-cross-node:
 	rm -rf ./cross-node/data*
+	rm -rf ./cross-node/certs/cluster-certs/*

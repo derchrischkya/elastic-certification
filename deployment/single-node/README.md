@@ -23,3 +23,24 @@
 ## Kibana
 - username: kibana_system
 - password: changeme
+
+
+# How to use
+## Start the stack
+```bash
+cd ../
+make start-single-node
+```
+
+## Stop the stack
+```bash
+cd ../
+make stop-single-node
+```
+
+# Folder structure
+- `data`: The directory contains the data of the Elasticsearch and Kibana.
+- `config`: The directory contains custom configuration files of the Elasticsearch and Kibana executed after starting the services.
+- `setup`: The directory contains the setup files of the Elasticsearch and Kibana like roles, users, etc.
+- `docker-compose.yml`: The file contains the services of the stack.
+

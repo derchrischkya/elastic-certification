@@ -1,6 +1,12 @@
 version: '3.7'
 
 networks:
+  public:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.9.9.0/16
+          gateway: 10.9.9.1
   elastic-node1:
     driver: bridge
     ipam:
@@ -20,9 +26,20 @@ networks:
        - subnet: 10.3.0.0/16
          gateway: 10.3.0.1
 services:
-  setup1:
-    profiles:
-      - setup1
+  certs:
+    init: true
+    build:
+      context: setup/
+      args:
+        ELASTIC_VERSION: ${ELASTIC_VERSION}
+    entrypoint: /entrypoint.sh
+    volumes:
+      - ./certs/entrypoint.sh:/entrypoint.sh:ro,Z
+      - ./certs/instances.yaml:/usr/share/elasticsearch/config/instances.yml:ro,Z
+      - ./certs/cluster-certs:/certs
+    environment:
+      CERT_CREATION: true
+  setup-1:
     build:
       context: setup/
       args:
@@ -32,18 +49,20 @@ services:
       - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
       - ./setup/lib.sh:/lib.sh:ro,Z
       - ./setup/roles:/roles:ro,Z
+      - ./setup/instances.yaml:/usr/share/elasticsearch/config/instances.yml:ro,Z
+      - ./setup/certs:/certs:ro,Z
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
       ELASTICSEARCH_HOST: elasticsearch-1
+      CERT_CREATION: true
     networks:
       elastic-node1: 
         ipv4_address: 10.5.0.4
     depends_on:
-      - elasticsearch-1
-  setup2:
-    profiles:
-      - setup2
+      elasticsearch-2:
+        condition: service_healthy
+  setup-2:
     build:
       context: setup/
       args:
@@ -61,10 +80,9 @@ services:
       elastic-node2: 
         ipv4_address: 10.4.0.4
     depends_on:
-      - elasticsearch-2
-  setup3:
-    profiles:
-      - setup3
+      elasticsearch-2:
+        condition: service_healthy
+  setup-3:
     build:
       context: setup/
       args:
@@ -82,10 +100,13 @@ services:
       elastic-node3: 
         ipv4_address: 10.3.0.4
     depends_on:
-      - elasticsearch-3
+      elasticsearch-3:
+        condition: service_healthy
   # Elasticsearch Docker Images: https://www.docker.elastic.co/
   elasticsearch-1:
     networks:
+      public:
+        ipv4_address: 10.9.9.2
       elastic-node1:
         ipv4_address: 10.5.0.2
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
@@ -93,6 +114,7 @@ services:
     environment:
       node.name: elasticsearch
       ES_JAVA_OPTS: -Xms512m -Xmx512m
+      CONFIG_DIR: ${ELASTICSEARCH_DIR}/config
       # Bootstrap password.
       # Used to initialize the keystore during the initial startup of
       # Elasticsearch. Ignored on subsequent runs.
@@ -112,22 +134,30 @@ services:
     volumes:
       - ./data-1:/usr/share/elasticsearch/data
       - ./config/elasticsearch-1.yaml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+      - ./certs/cluster-certs/elasticsearch-1:/usr/share/elasticsearch/config/certs/elasticsearch:ro,Z
+      - ./certs/cluster-certs/ca:/usr/share/elasticsearch/config/certs/ca:ro,Z
     ports:
       - 9200:9200
       - 9300:9300
     healthcheck:
-      test: "curl -s http://elasticsearch-1:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
+      test: "curl -k -s https://elasticsearch-1:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
       interval: 10s
       retries: 10
       start_period: 10s
+    depends_on: 
+      certs:
+        condition: service_completed_successfully
   elasticsearch-2:
     networks:
+      public:
+        ipv4_address: 10.9.9.3
       elastic-node2:
         ipv4_address: 10.4.0.2
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
     container_name: elasticsearch-2
     environment:
       node.name: elasticsearch
+      CONFIG_DIR: ${ELASTICSEARCH_DIR}/config
       ES_JAVA_OPTS: -Xms512m -Xmx512m
       # Bootstrap password.
       # Used to initialize the keystore during the initial startup of
@@ -148,21 +178,29 @@ services:
     volumes:
       - ./data-2:/usr/share/elasticsearch/data
       - ./config/elasticsearch-2.yaml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+      - ./certs/cluster-certs/elasticsearch-2:/usr/share/elasticsearch/config/certs/elasticsearch:ro,Z
+      - ./certs/cluster-certs/ca:/usr/share/elasticsearch/config/certs/ca:ro,Z
     ports:
       - 9202:9200
       - 9302:9300
     healthcheck:
-      test: "curl -s http://elasticsearch-2:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
+      test: "curl -k -s https://elasticsearch-2:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
       interval: 10s
       retries: 10
       start_period: 10s
+    depends_on: 
+      certs:
+        condition: service_completed_successfully
   elasticsearch-3:
     networks:
+      public:
+        ipv4_address: 10.9.9.4
       elastic-node3:
         ipv4_address: 10.3.0.2
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
     container_name: elasticsearch-3
     environment:
+      CONFIG_DIR: ${ELASTICSEARCH_DIR}/config
       node.name: elasticsearch
       ES_JAVA_OPTS: -Xms512m -Xmx512m
       # Bootstrap password.
@@ -184,15 +222,19 @@ services:
     volumes:
       - ./data-3:/usr/share/elasticsearch/data
       - ./config/elasticsearch-3.yaml:/usr/share/elasticsearch/config/elasticsearch.yml:ro,Z
+      - ./certs/cluster-certs/elasticsearch-3:/usr/share/elasticsearch/config/certs/elasticsearch:ro,Z
+      - ./certs/cluster-certs/ca:/usr/share/elasticsearch/config/certs/ca:ro,Z
     ports:
       - 9203:9200
       - 9303:9300
     healthcheck:
-      test: "curl -s http://elasticsearch-3:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
+      test: "curl -k -s https://elasticsearch-3:9200/_cluster/health?pretty -u elastic:${ELASTIC_PASSWORD:-} | grep status | grep -q '\\(green\\|yellow\\)'"
       interval: 10s
       retries: 10
       start_period: 10s
-
+    depends_on: 
+      certs:
+        condition: service_completed_successfully
   kibana:
     networks:
       elastic-node1:
@@ -200,13 +242,16 @@ services:
     container_name: kibana
     image: docker.elastic.co/kibana/kibana:${KIBANA_VERSION}
     environment:
+      CONFIG_DIR: ${KIBANA_DIR}/config
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
     volumes:
       - ./config/kibana.yaml:/usr/share/kibana/config/kibana.yml:ro,Z
+      - ./certs/cluster-certs/kibana:/usr/share/kibana/config/certs/kibana:ro,Z
+      - ./certs/cluster-certs/ca:/usr/share/kibana/config/certs/ca:ro,Z
     ports:
       - 5601:5601
     healthcheck:
-      test: "curl -s http://127.0.0.1:5601/api/status -u elastic:changeme | grep status | grep '{\"overall\":{\"level\":\"available\"'"
+      test: "curl -k -s https://127.0.0.1:5601/api/status -u elastic:changeme | grep status | grep '{\"overall\":{\"level\":\"available\"'"
       interval: 10s
       retries: 20
       start_period: 10s
@@ -224,10 +269,11 @@ services:
     volumes:
       - ./config/demo-data:/demo-data
     entrypoint: /bin/sh -c /demo-data/entrypoint-1.sh
+    working_dir: /demo-data
     networks: 
       elastic-node1: 
         ipv4_address: 10.5.0.5
-    depends_on:
+    depends_on: 
       elasticsearch-1:
         condition: service_healthy
       kibana:
@@ -243,6 +289,7 @@ services:
     volumes:
       - ./config/demo-data:/demo-data
     entrypoint: /bin/sh -c /demo-data/entrypoint-2.sh
+    working_dir: /demo-data
     networks: 
       elastic-node2: 
         ipv4_address: 10.4.0.5
@@ -260,6 +307,7 @@ services:
     volumes:
       - ./config/demo-data:/demo-data
     entrypoint: /bin/sh -c /demo-data/entrypoint-2.sh
+    working_dir: /demo-data
     networks: 
       elastic-node3: 
         ipv4_address: 10.3.0.5

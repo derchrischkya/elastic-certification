@@ -65,7 +65,6 @@ services:
       interval: 10s
       retries: 10
       start_period: 10s
-
   kibana:
     networks:
       elastic-singlenode:
@@ -95,6 +94,7 @@ services:
     volumes:
       - ./config/demo-data:/demo-data
     entrypoint: /bin/sh -c /demo-data/entrypoint.sh
+    working_dir: /demo-data
     networks: 
       elastic-singlenode: 
         ipv4_address: 10.5.0.5

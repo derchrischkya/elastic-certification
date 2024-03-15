@@ -4,7 +4,7 @@
 #
 server.name: kibana
 server.host: 0.0.0.0
-elasticsearch.hosts: [ http://elasticsearch-1:9200 ]
+elasticsearch.hosts: [ https://elasticsearch-1:9200 ]
 
 monitoring.ui.container.elasticsearch.enabled: true
 monitoring.ui.container.logstash.enabled: true
@@ -13,6 +13,7 @@ monitoring.ui.container.logstash.enabled: true
 #
 elasticsearch.username: kibana_system
 elasticsearch.password: ${KIBANA_SYSTEM_PASSWORD}
+elasticsearch.ssl.certificateAuthorities: [ "${CONFIG_DIR}/certs/ca/ca.crt" ]
 
 ## Encryption keys (optional but highly recommended)
 ##
@@ -30,13 +31,13 @@ elasticsearch.password: ${KIBANA_SYSTEM_PASSWORD}
 ## Fleet
 ## https://www.elastic.co/guide/en/kibana/current/fleet-settings-kb.html
 #
-xpack.fleet.agents.fleet_server.hosts: [ http://fleet-server:8220 ]
+xpack.fleet.agents.fleet_server.hosts: [ https://fleet-server:8220 ]
 
 xpack.fleet.outputs:
   - id: fleet-default-output
     name: default
     type: elasticsearch
-    hosts: [ http://elasticsearch-1:9200 ]
+    hosts: [ https://elasticsearch-1:9200 ]
     is_default: true
     is_default_monitoring: true
 
@@ -96,4 +97,9 @@ xpack.fleet.agentPolicies:
               - name: host
                 value: 0.0.0.0:8200
               - name: url
-                value: http://apm-server:8200
+                value: https://apm-server:8200
+
+server.ssl.enabled: true
+server.ssl.certificate: "${CONFIG_DIR}/certs/kibana/kibana.crt"
+server.ssl.key: "${CONFIG_DIR}/certs/kibana/kibana.key"
+server.ssl.certificateAuthorities: [ "${CONFIG_DIR}/certs/ca/ca.crt" ]

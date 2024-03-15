@@ -1,1 +1,5 @@
 */data/*
+*.crt
+*.key
+*.p12
+*.pem
