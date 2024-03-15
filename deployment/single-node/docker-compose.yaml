@@ -79,7 +79,7 @@ services:
     ports:
       - 5601:5601
     healthcheck:
-      test: "curl -s http://kibana:5601/api/status -u elastic:${ELASTIC_PASSWORD:-}"
+      test: "curl -s http://127.0.0.1:5601/api/status -u elastic:changeme | grep status | grep '{\"overall\":{\"level\":\"available\"'"
       interval: 10s
       retries: 20
       start_period: 10s
