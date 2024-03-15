@@ -1,5 +1,6 @@
 
 #Install curl and unzip
+echo "Starting the entrypoint.sh script"
 apk add --no-cache curl
 apk add --no-cache unzip
 
