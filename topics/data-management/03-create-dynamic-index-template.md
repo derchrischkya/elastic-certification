@@ -1,3 +1,7 @@
+# Deployment 
+
+- Check out the [deployment](../../deployment/single-node/README.md) section to spin up an Elasticsearch cluster.
+
 # Example
 Create dynamic index template for the `weather` indicies with the following requirements:
 - Field `temperature` should be of type `float`
@@ -6,7 +10,7 @@ Create dynamic index template for the `weather` indicies with the following requ
 - Add Runtime field `day_of_week` should be of type `keyword`
 
 # Reference
-https://www.elastic.co/guide/en/elasticsearch/reference/current/index-templates.html
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/index-templates.html
 
 # Code
 #### Create template components

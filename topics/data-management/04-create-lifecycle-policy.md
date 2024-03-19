@@ -1,13 +1,21 @@
+# Deployment 
+
+- Check out the [deployment](../../deployment/single-node/README.md) section to spin up an Elasticsearch cluster.
+
 # Example
 Create an index `weather` with following lifecycle policy:
 - `warm` phase: 30 days
+    - `forcemerge` action
 - `cold` phase: 60 days
+    - `readonly` action
+    - `frozen` action
 - `delete` phase: 90 days
+    - `delete` action
 
 
 # Reference
-https://www.elastic.co/guide/en/elasticsearch/reference/current/set-up-lifecycle-policy.html
-https://www.elastic.co/guide/en/elasticsearch/reference/current/ilm-put-lifecycle.html
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/set-up-lifecycle-policy.html
+- https://www.elastic.co/guide/en/elasticsearch/reference/current/ilm-put-lifecycle.html
 
 # Code
 #### Create lifecycle policy
@@ -34,7 +42,8 @@ PUT _ilm/policy/my_policy
         "cold": {
             "min_age": "60d",
             "actions": {
-            "readonly": {}
+            "readonly": {},
+            "frozen": {}
             }
         },
       "delete": {
