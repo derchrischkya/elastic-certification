@@ -77,7 +77,7 @@ This project is used to cover basic requirements for elastic certified engineer 
 - Sort the results of a query by a given set of requirements
 - Implement pagination of the results of a search query
 - Define and use index aliases
-- Define and use a search elastic-certification
+- Define and use a search template
 
 4. Data Processing
 - Define a mapping that satisfies a given set of requirements

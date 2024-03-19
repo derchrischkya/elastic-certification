@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 #Install curl and unzip
 echo "Starting the entrypoint.sh script"
 apk add --no-cache curl
@@ -39,3 +39,10 @@ if [ $? -ne 0 ]; then
 else
   echo "The Kibana data view was created successfully"
 fi
+
+
+## Create elasticsearch sample data
+
+cd /usr/share/elasticsearch
+node scripts/makelogs --auth elastic:${ELASTIC_PASSWORD}
+
