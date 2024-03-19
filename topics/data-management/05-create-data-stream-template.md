@@ -1,3 +1,7 @@
+# Deployment 
+
+- Check out the [deployment](../../deployment/single-node/README.md) section to spin up an Elasticsearch cluster.
+
 # Example
 Create an data-stream `weather_stream` with following lifecycle policy:
 - `warm` phase: 30 days

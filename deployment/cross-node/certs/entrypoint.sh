@@ -2,8 +2,9 @@
 # --------------------------------------------------------
 # Create Certificate Authorities
 if [[ ${CERT_CREATION} == "true" ]];
-then
     rm -rf /certs/*
+    cd /certs
+then
 	echo 'Creating certificate authorities'
 	/usr/share/elasticsearch/bin/elasticsearch-certutil ca --pass "" --pem --out /tmp/ca.zip --silent
 	unzip /tmp/ca.zip -d /certs/
@@ -17,5 +18,4 @@ then
     echo "Creating crt and key certificates"
     /usr/share/elasticsearch/bin/elasticsearch-certutil cert --silent --in /usr/share/elasticsearch/config/instances.yml --out /tmp/bundle.zip --ca-cert /certs/ca/ca.crt --ca-key /certs/ca/ca.key --ca-pass "" --pem
     unzip /tmp/bundle.zip -d /certs/
-    exit 0
 fi

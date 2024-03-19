@@ -3,10 +3,6 @@ version: '3.7'
 networks:
   public:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 10.9.9.0/16
-          gateway: 10.9.9.1
   elastic-node1:
     driver: bridge
     ipam:
@@ -37,6 +33,7 @@ services:
       - ./certs/entrypoint.sh:/entrypoint.sh:ro,Z
       - ./certs/instances.yaml:/usr/share/elasticsearch/config/instances.yml:ro,Z
       - ./certs/cluster-certs:/certs
+      - ./certs/nginx:/certs-nginx
     environment:
       CERT_CREATION: true
   setup-1:
@@ -49,8 +46,6 @@ services:
       - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
       - ./setup/lib.sh:/lib.sh:ro,Z
       - ./setup/roles:/roles:ro,Z
-      - ./setup/instances.yaml:/usr/share/elasticsearch/config/instances.yml:ro,Z
-      - ./setup/certs:/certs:ro,Z
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
@@ -106,11 +101,11 @@ services:
   elasticsearch-1:
     networks:
       public:
-        ipv4_address: 10.9.9.2
       elastic-node1:
         ipv4_address: 10.5.0.2
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
     container_name: elasticsearch-1
+    hostname: elasticsearch-1
     environment:
       node.name: elasticsearch
       ES_JAVA_OPTS: -Xms512m -Xmx512m
@@ -148,9 +143,9 @@ services:
       certs:
         condition: service_completed_successfully
   elasticsearch-2:
+    hostname: elasticsearch-2
     networks:
       public:
-        ipv4_address: 10.9.9.3
       elastic-node2:
         ipv4_address: 10.4.0.2
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
@@ -192,9 +187,9 @@ services:
       certs:
         condition: service_completed_successfully
   elasticsearch-3:
+    hostname: elasticsearch-3
     networks:
       public:
-        ipv4_address: 10.9.9.4
       elastic-node3:
         ipv4_address: 10.3.0.2
     image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}

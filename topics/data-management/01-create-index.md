@@ -1,3 +1,7 @@
+# Deployment 
+
+- Check out the [deployment](../../deployment/single-node/README.md) section to spin up an Elasticsearch cluster.
+
 # Example
 Create index `weather` with the following requirements:
 - Field `temperature` should be of type `float`
